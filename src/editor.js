@@ -89,6 +89,7 @@ class MediumDraftEditor extends React.Component {
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
     processURL: PropTypes.func,
+    toolbarInputPlaceholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -121,6 +122,7 @@ class MediumDraftEditor extends React.Component {
     disableToolbar: false,
     showLinkEditToolbar: true,
     toolbarConfig: {},
+    toolbarInputPlaceholder: 'Press ENTER to accept, ESC to cancel',
   };
 
   constructor(props) {
@@ -517,7 +519,7 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig } = this.props;
+    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, toolbarInputPlaceholder } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     let isCursorLink = false;
@@ -570,6 +572,7 @@ class MediumDraftEditor extends React.Component {
               focus={this.focus}
               blockButtons={blockButtons}
               inlineButtons={inlineButtons}
+              toolbarInputPlaceholder={toolbarInputPlaceholder}
             />
           )}
           {isCursorLink && (

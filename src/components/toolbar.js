@@ -23,6 +23,7 @@ export default class Toolbar extends React.Component {
     editorNode: PropTypes.object,
     setLink: PropTypes.func,
     focus: PropTypes.func,
+    toolbarInputPlaceholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -196,7 +197,7 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const { editorState, editorEnabled, inlineButtons } = this.props;
+    const { editorState, editorEnabled, inlineButtons, toolbarInputPlaceholder } = this.props;
     const { showURLInput, urlInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
@@ -220,7 +221,7 @@ export default class Toolbar extends React.Component {
               className="md-url-input"
               onKeyDown={this.onKeyDown}
               onChange={this.onChange}
-              placeholder="Press ENTER or ESC"
+              placeholder={toolbarInputPlaceholder}
               value={urlInputValue}
             />
           </div>

@@ -177,6 +177,13 @@ export const isCursorBetweenLink = (editorState) => {
               url: entity.getData().url,
             };
           }
+          if (entity.getType() === Entity.COVER_REQUEST) {
+            ret = {
+              entityKey,
+              blockKey,
+              url: entity.getData().cover,
+            };
+          }
         }
       }
     }

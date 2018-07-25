@@ -237,7 +237,7 @@ class MediumDraftEditor extends React.Component {
     let entityKey = null;
 
     if (cover !== '') {
-      const contentWithEntity = content.createEntity('COVER-REQUEST', 'MUTABLE', { cover });
+      const contentWithEntity = content.createEntity(E.COVER_REQUEST, 'MUTABLE', { cover });
       editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }

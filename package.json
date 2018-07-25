@@ -1,9 +1,9 @@
 {
-  "name": "medium-draft",
+  "name": "medium-draft-custom",
   "version": "0.5.6",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
-  "repository": "https://github.com/brijeshb42/medium-draft",
+  "repository": "https://github.com/desktp/medium-draft",
   "scripts": {
     "start": "npm run dev",
     "clean": "rm -f dist/*.js && rm -f dist/*.css && rm -rf lib",
@@ -78,7 +78,6 @@
     "webpack-dev-server": "^2.2.0"
   },
   "bugs": {
-    "url": "https://github.com/brijeshb42/medium-draft/issues"
-  },
-  "homepage": "http://bitwiser.in/medium-draft/"
+    "url": "https://github.com/desktp/medium-draft/issues"
+  }
 }

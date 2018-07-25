@@ -81,7 +81,7 @@ export default class Toolbar extends React.Component {
   // }
 
   componentDidUpdate() {
-    if (!this.props.editorEnabled || this.state.showURLInput) {
+    if (!this.props.editorEnabled || this.state.showURLInput || this.state.showCoverInput) {
       return;
     }
     const selectionState = this.props.editorState.getSelection();

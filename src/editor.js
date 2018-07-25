@@ -89,7 +89,8 @@ class MediumDraftEditor extends React.Component {
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
     processURL: PropTypes.func,
-    toolbarInputPlaceholder: PropTypes.string,
+    // New custom props
+    displayCoverRequest: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -122,7 +123,7 @@ class MediumDraftEditor extends React.Component {
     disableToolbar: false,
     showLinkEditToolbar: true,
     toolbarConfig: {},
-    toolbarInputPlaceholder: 'Press ENTER to accept, ESC to cancel',
+    displayCoverRequest: false,
   };
 
   constructor(props) {
@@ -143,6 +144,9 @@ class MediumDraftEditor extends React.Component {
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+
+    // New customizations
+    this.setCoverRequest = this.setCoverRequest.bind(this);
   }
 
   /**
@@ -220,6 +224,20 @@ class MediumDraftEditor extends React.Component {
     }
     if (newUrl !== '') {
       const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', { url: newUrl });
+      editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+      entityKey = contentWithEntity.getLastCreatedEntityKey();
+    }
+    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
+  }
+
+  setCoverRequest(cover) {
+    let { editorState } = this.props;
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    let entityKey = null;
+
+    if (cover !== '') {
+      const contentWithEntity = content.createEntity('COVER-REQUEST', 'MUTABLE', { cover });
       editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
@@ -519,7 +537,9 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, toolbarInputPlaceholder } = this.props;
+    const {
+      editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, displayCoverRequest,
+    } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     let isCursorLink = false;
@@ -569,10 +589,11 @@ class MediumDraftEditor extends React.Component {
               toggleInlineStyle={this.toggleInlineStyle}
               editorEnabled={editorEnabled}
               setLink={this.setLink}
+              setCoverRequest={this.setCoverRequest}
               focus={this.focus}
               blockButtons={blockButtons}
               inlineButtons={inlineButtons}
-              toolbarInputPlaceholder={toolbarInputPlaceholder}
+              displayCoverRequest={displayCoverRequest}
             />
           )}
           {isCursorLink && (

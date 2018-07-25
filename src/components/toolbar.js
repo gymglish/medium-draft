@@ -23,7 +23,8 @@ export default class Toolbar extends React.Component {
     editorNode: PropTypes.object,
     setLink: PropTypes.func,
     focus: PropTypes.func,
-    toolbarInputPlaceholder: PropTypes.string,
+    displayCoverRequest: PropTypes.bool,
+    setCoverRequest: PropTypes.func,
   };
 
   static defaultProps = {
@@ -35,7 +36,9 @@ export default class Toolbar extends React.Component {
     super(props);
     this.state = {
       showURLInput: false,
+      showCoverInput: false,
       urlInputValue: '',
+      coverInputValue: '',
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
@@ -55,6 +58,12 @@ export default class Toolbar extends React.Component {
         this.setState({
           showURLInput: false,
           urlInputValue: '',
+        });
+      }
+      if (this.state.showCoverInput) {
+        this.setState({
+          showCoverInput: false,
+          coverInputValue: '',
         });
       }
       return;
@@ -121,16 +130,20 @@ export default class Toolbar extends React.Component {
     if (e.which === 13) {
       e.preventDefault();
       e.stopPropagation();
-      this.props.setLink(this.state.urlInputValue);
+      if (this.state.showURLInput) {
+        this.props.setLink(this.state.urlInputValue);
+      } else if (this.state.showCoverInput) {
+        this.props.setCoverRequest(this.state.coverInputValue);
+      }
       this.hideLinkInput();
     } else if (e.which === 27) {
       this.hideLinkInput();
     }
   }
 
-  onChange(e) {
+  onChange = (field) => (e) => {
     this.setState({
-      urlInputValue: e.target.value,
+      [field]: e.target.value,
     });
   }
 
@@ -197,8 +210,8 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const { editorState, editorEnabled, inlineButtons, toolbarInputPlaceholder } = this.props;
-    const { showURLInput, urlInputValue } = this.state;
+    const { editorState, editorEnabled, inlineButtons, displayCoverRequest } = this.props;
+    const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
       isOpen = false;
@@ -220,9 +233,35 @@ export default class Toolbar extends React.Component {
               type="text"
               className="md-url-input"
               onKeyDown={this.onKeyDown}
-              onChange={this.onChange}
-              placeholder={toolbarInputPlaceholder}
+              onChange={this.onChange('urlInputValue')}
+              placeholder={'ENTER to accept, ESC to cancel'}
               value={urlInputValue}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (showCoverInput) {
+      let className = `md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`;
+      className += ' md-editor-toolbar--linkinput';
+      return (
+        <div
+          className={className}
+        >
+          <div
+            className="md-RichEditor-controls md-RichEditor-show-link-input"
+            style={{ display: 'block' }}
+          >
+            <span className="md-url-input-close" onClick={this.hideLinkInput}>&times;</span>
+            <input
+              ref={node => { this.urlinput = node; }}
+              type="text"
+              className="md-url-input"
+              onKeyDown={this.onKeyDown}
+              onChange={this.onChange('coverInputValue')}
+              placeholder={'Begin typing cover name or ENTER to create'}
+              value={coverInputValue}
             />
           </div>
         </div>
@@ -272,6 +311,19 @@ export default class Toolbar extends React.Component {
             </span>
           </div>
         )}
+        {
+          displayCoverRequest && (
+            <div className="md-RichEditor-controls">
+              <span
+                className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
+                onClick={this.handleLinkInput}
+                aria-label="Add a cover request"
+              >
+                Cover
+              </span>
+            </div>
+          )
+        }
       </div>
     );
   }

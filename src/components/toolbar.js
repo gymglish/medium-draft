@@ -45,6 +45,8 @@ export default class Toolbar extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.handleLinkInput = this.handleLinkInput.bind(this);
     this.hideLinkInput = this.hideLinkInput.bind(this);
+
+    this.handleCoverInput = this.handleCoverInput.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -197,6 +199,56 @@ export default class Toolbar extends React.Component {
     }
   }
 
+  handleCoverInput(e, direct = false) {
+    if (direct !== true) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const { editorState } = this.props;
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      this.props.focus();
+      return;
+    }
+    const currentBlock = getCurrentBlock(editorState);
+    let selectedEntity = '';
+    let coverFound = false;
+    currentBlock.findEntityRanges((character) => {
+      const entityKey = character.getEntity();
+      selectedEntity = entityKey;
+      return entityKey !== null && editorState.getCurrentContent().getEntity(entityKey).getType() === Entity.COVER_REQUEST;
+    }, (start, end) => {
+      let selStart = selection.getAnchorOffset();
+      let selEnd = selection.getFocusOffset();
+      if (selection.getIsBackward()) {
+        selStart = selection.getFocusOffset();
+        selEnd = selection.getAnchorOffset();
+      }
+      if (start === selStart && end === selEnd) {
+        coverFound = true;
+        const { cover } = editorState.getCurrentContent().getEntity(selectedEntity).getData();
+        this.setState({
+          showCoverInput: true,
+          coverInputValue: cover,
+        }, () => {
+          setTimeout(() => {
+            this.coverinput.focus();
+            this.coverinput.select();
+          }, 0);
+        });
+      }
+    });
+    if (!coverFound) {
+      this.setState({
+        showCoverInput: true,
+      }, () => {
+        setTimeout(() => {
+          this.coverinput.focus();
+        }, 0);
+      });
+    }
+  }
+
   hideLinkInput(e = null) {
     if (e !== null) {
       e.preventDefault();
@@ -204,7 +256,9 @@ export default class Toolbar extends React.Component {
     }
     this.setState({
       showURLInput: false,
+      showCoverInput: false,
       urlInputValue: '',
+      coverInputValue: '',
     }, this.props.focus
     );
   }
@@ -255,7 +309,7 @@ export default class Toolbar extends React.Component {
           >
             <span className="md-url-input-close" onClick={this.hideLinkInput}>&times;</span>
             <input
-              ref={node => { this.urlinput = node; }}
+              ref={node => { this.coverinput = node; }}
               type="text"
               className="md-url-input"
               onKeyDown={this.onKeyDown}
@@ -316,7 +370,7 @@ export default class Toolbar extends React.Component {
             <div className="md-RichEditor-controls">
               <span
                 className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-                onClick={this.handleLinkInput}
+                onClick={this.handleCoverInput}
                 aria-label="Add a cover request"
               >
                 Cover

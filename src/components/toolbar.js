@@ -149,6 +149,7 @@ export default class Toolbar extends React.Component {
 
   onChange = (field) => (e) => {
     const value = field === 'coverInputValue' ? e.target.value.toUpperCase().replace(/ /g, '-').replace(/[^\w-]/gi, '') : e.target.value;
+    console.log('onChange value', field, value);
     this.setState({
       [field]: value,
     });

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import ReactAutocomplete from 'react-autocomplete';
+
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
 
@@ -25,8 +27,8 @@ export default class Toolbar extends React.Component {
     focus: PropTypes.func,
     displayCoverRequest: PropTypes.bool,
     setCoverRequest: PropTypes.func,
-    customInputComponent: PropTypes.element,
-    customInputProps: PropTypes.shape(),
+    autocompleteItems: PropTypes.arrayOf(PropTypes.shape()),
+    onAutocompleteSelect: PropTypes.func,
   };
 
   static defaultProps = {
@@ -266,7 +268,7 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const { editorState, editorEnabled, inlineButtons, displayCoverRequest, customInputComponent, customInputProps } = this.props;
+    const { editorState, editorEnabled, inlineButtons, displayCoverRequest, autocompleteItems, onAutocompleteSelect } = this.props;
     const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
@@ -301,7 +303,7 @@ export default class Toolbar extends React.Component {
     if (showCoverInput) {
       let className = `md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`;
       className += ' md-editor-toolbar--linkinput';
-      const Component = customInputComponent || 'input';
+
       return (
         <div
           className={className}
@@ -311,7 +313,7 @@ export default class Toolbar extends React.Component {
             style={{ display: 'block' }}
           >
             <span className="md-url-input-close" onClick={this.hideLinkInput}>&times;</span>
-            <Component
+            <ReactAutocomplete
               ref={node => { this.coverinput = node; }}
               type="text"
               className="md-url-input"
@@ -319,7 +321,24 @@ export default class Toolbar extends React.Component {
               onChange={this.onChange('coverInputValue')}
               placeholder={'Begin typing cover name or ENTER to create'}
               value={coverInputValue}
-              {...customInputProps}
+              autoHighlight={false}
+              items={autocompleteItems}
+              onSelect={(inputValue, item) => {
+                this.hideLinkInput();
+                onAutocompleteSelect(inputValue, item);
+              }}
+              shouldItemRender={(item, inputValue) => (item.title ? item.title.includes(inputValue) : false)}
+              getItemValue={item => item.title}
+              inputProps={{
+                onKeyPress: this.onKeyDown,
+                maxLength: 50,
+              }}
+              renderMenu={(items) => <div>{items}</div>}
+              renderItem={(item, highlighted) =>
+                (<div key={item._id} style={{ backgroundColor: highlighted ? '#eee' : 'transparent' }}>
+                  {item.title}
+                </div>)
+              }
             />
           </div>
         </div>

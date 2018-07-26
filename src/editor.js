@@ -91,6 +91,8 @@ class MediumDraftEditor extends React.Component {
     processURL: PropTypes.func,
     // New custom props
     displayCoverRequest: PropTypes.bool,
+    customInputComponent: PropTypes.element,
+    customInputProps: PropTypes.shape(),
   };
 
   static defaultProps = {
@@ -124,6 +126,8 @@ class MediumDraftEditor extends React.Component {
     showLinkEditToolbar: true,
     toolbarConfig: {},
     displayCoverRequest: false,
+    customInputComponent: 'input',
+    customInputProps: {},
   };
 
   constructor(props) {
@@ -539,6 +543,7 @@ class MediumDraftEditor extends React.Component {
   render() {
     const {
       editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, displayCoverRequest,
+      customInputProps, customInputComponent,
     } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
@@ -594,6 +599,8 @@ class MediumDraftEditor extends React.Component {
               blockButtons={blockButtons}
               inlineButtons={inlineButtons}
               displayCoverRequest={displayCoverRequest}
+              customInputComponent={customInputComponent}
+              customInputProps={customInputProps}
             />
           )}
           {isCursorLink && (

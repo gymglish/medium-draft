@@ -25,6 +25,8 @@ export default class Toolbar extends React.Component {
     focus: PropTypes.func,
     displayCoverRequest: PropTypes.bool,
     setCoverRequest: PropTypes.func,
+    customInputComponent: PropTypes.element,
+    customInputProps: PropTypes.shape(),
   };
 
   static defaultProps = {
@@ -264,7 +266,7 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const { editorState, editorEnabled, inlineButtons, displayCoverRequest } = this.props;
+    const { editorState, editorEnabled, inlineButtons, displayCoverRequest, customInputComponent, customInputProps } = this.props;
     const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
@@ -299,6 +301,7 @@ export default class Toolbar extends React.Component {
     if (showCoverInput) {
       let className = `md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`;
       className += ' md-editor-toolbar--linkinput';
+      const Component = customInputComponent || 'input';
       return (
         <div
           className={className}
@@ -308,7 +311,7 @@ export default class Toolbar extends React.Component {
             style={{ display: 'block' }}
           >
             <span className="md-url-input-close" onClick={this.hideLinkInput}>&times;</span>
-            <input
+            <Component
               ref={node => { this.coverinput = node; }}
               type="text"
               className="md-url-input"
@@ -316,6 +319,7 @@ export default class Toolbar extends React.Component {
               onChange={this.onChange('coverInputValue')}
               placeholder={'Begin typing cover name or ENTER to create'}
               value={coverInputValue}
+              {...customInputProps}
             />
           </div>
         </div>

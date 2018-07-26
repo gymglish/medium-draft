@@ -484,7 +484,7 @@ class MediumDraftEditor extends React.Component {
     });
   };
 
-  editLinkAfterSelection = (blockKey, entityKey = null) => {
+  editLinkAfterSelection = (blockKey, entityKey = null, entityType) => {
     if (entityKey === null) {
       return;
     }
@@ -505,7 +505,11 @@ class MediumDraftEditor extends React.Component {
       this.onChange(newEditorState);
       setTimeout(() => {
         if (this.toolbar) {
-          this.toolbar.handleLinkInput(null, true);
+          if (entityType === E.LINK) {
+            this.toolbar.handleLinkInput(null, true);
+          } else {
+            this.toolbar.handleCoverInput(null, true);
+          }
         }
       }, 100);
     });

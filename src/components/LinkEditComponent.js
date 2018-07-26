@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getVisibleSelectionRect } from 'draft-js';
 
+import { Entity } from '../util/constants';
+
 const getRelativeParent = (element) => {
   if (!element) {
     return null;
@@ -19,9 +21,10 @@ export default class LinkEditComponent extends React.Component {
 
   static propTypes = {
     editorState: PropTypes.object.isRequired,
-    url: PropTypes.string.isRequired,
+    data: PropTypes.string.isRequired,
     blockKey: PropTypes.string.isRequired,
     entityKey: PropTypes.string.isRequired,
+    entityType: PropTypes.string.isRequired,
     removeLink: PropTypes.func.isRequired,
     editLink: PropTypes.func.isRequired,
   };
@@ -82,13 +85,13 @@ export default class LinkEditComponent extends React.Component {
   editLink = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    this.props.editLink(this.props.blockKey, this.props.entityKey);
+    this.props.editLink(this.props.blockKey, this.props.entityKey, this.props.entityType);
   };
 
   render() {
-    let url = this.props.url;
-    if (url.length > 30) {
-      url = `${url.slice(0, 30)}...`;
+    let data = this.props.data;
+    if (data.length > 30) {
+      data = `${data.slice(0, 30)}...`;
     }
     return (
       <div
@@ -98,7 +101,10 @@ export default class LinkEditComponent extends React.Component {
           this.toolbar = element;
         }}
       >
-        <a href={this.props.url} title={this.props.url} target="_blank" rel="noopener noreferrer">{url}</a>
+        { this.props.entityType === Entity.LINK
+            ? <a href={this.props.data} title={this.props.data} target="_blank" rel="noopener noreferrer">{data}</a>
+            : data
+        }
         <button className="md-editor-toolbar-unlink-button" onClick={this.removeLink}>Unlink</button>
         <button className="md-editor-toolbar-edit-button" onClick={this.editLink}>Edit</button>
       </div>

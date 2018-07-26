@@ -234,13 +234,14 @@ class MediumDraftEditor extends React.Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
 
-  setCoverRequest(cover) {
+  setCoverRequest(cover, preexisting = false) {
     let { editorState } = this.props;
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     let entityKey = null;
 
     if (cover !== '') {
+      this.props.onAutocompleteSelect(cover, preexisting);
       const contentWithEntity = content.createEntity(E.COVER_REQUEST, 'MUTABLE', { cover });
       editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
       entityKey = contentWithEntity.getLastCreatedEntityKey();

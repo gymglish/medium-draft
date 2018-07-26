@@ -268,7 +268,14 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const { editorState, editorEnabled, inlineButtons, displayCoverRequest, autocompleteItems, onAutocompleteSelect } = this.props;
+    const {
+      editorState,
+      editorEnabled,
+      inlineButtons,
+      displayCoverRequest,
+      autocompleteItems,
+      // onAutocompleteSelect,
+    } = this.props;
     const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
@@ -316,16 +323,15 @@ export default class Toolbar extends React.Component {
             <ReactAutocomplete
               ref={node => { this.coverinput = node; }}
               type="text"
-              onKeyDown={this.onKeyDown}
               onChange={this.onChange('coverInputValue')}
               placeholder={'Begin typing cover name or ENTER to create'}
               value={coverInputValue}
               autoHighlight={false}
               items={autocompleteItems}
               onSelect={(inputValue, item) => {
-                this.props.setCoverRequest(item.title);
+                this.props.setCoverRequest(item.title, true);
                 this.hideLinkInput();
-                onAutocompleteSelect(inputValue, item);
+                // onAutocompleteSelect(inputValue, item);
               }}
               shouldItemRender={(item, inputValue) => (item.title ? item.title.includes(inputValue) : false)}
               getItemValue={item => item.title}

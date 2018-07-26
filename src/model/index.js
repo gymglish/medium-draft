@@ -175,7 +175,7 @@ export const isCursorBetweenLink = (editorState) => {
               entityKey,
               blockKey,
               data: entity.getData().url,
-              type: entity.getType(),
+              entityType: entity.getType(),
             };
           }
           if (entity.getType() === Entity.COVER_REQUEST) {
@@ -183,7 +183,7 @@ export const isCursorBetweenLink = (editorState) => {
               entityKey,
               blockKey,
               data: entity.getData().cover,
-              type: entity.getType(),
+              entityType: entity.getType(),
             };
           }
         }

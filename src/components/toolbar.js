@@ -339,7 +339,7 @@ export default class Toolbar extends React.Component {
                 (<div
                   key={item._id}
                   style={{
-                    backgroundColor: highlighted ? '#36383e' : 'transparent',
+                    backgroundColor: highlighted ? '#7a88a9' : 'transparent',
                     cursor: 'pointer',
                   }}
                 >

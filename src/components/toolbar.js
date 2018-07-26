@@ -316,7 +316,6 @@ export default class Toolbar extends React.Component {
             <ReactAutocomplete
               ref={node => { this.coverinput = node; }}
               type="text"
-              className="md-url-input"
               onKeyDown={this.onKeyDown}
               onChange={this.onChange('coverInputValue')}
               placeholder={'Begin typing cover name or ENTER to create'}
@@ -324,6 +323,7 @@ export default class Toolbar extends React.Component {
               autoHighlight={false}
               items={autocompleteItems}
               onSelect={(inputValue, item) => {
+                this.props.setCoverRequest(item.title);
                 this.hideLinkInput();
                 onAutocompleteSelect(inputValue, item);
               }}
@@ -332,10 +332,17 @@ export default class Toolbar extends React.Component {
               inputProps={{
                 onKeyPress: this.onKeyDown,
                 maxLength: 50,
+                className: 'md-url-input',
               }}
               renderMenu={(items) => <div>{items}</div>}
               renderItem={(item, highlighted) =>
-                (<div key={item._id} style={{ backgroundColor: highlighted ? '#eee' : 'transparent' }}>
+                (<div
+                  key={item._id}
+                  style={{
+                    backgroundColor: highlighted ? '#36383e' : 'transparent',
+                    cursor: 'pointer',
+                  }}
+                >
                   {item.title}
                 </div>)
               }

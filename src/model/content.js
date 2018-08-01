@@ -6,12 +6,17 @@ import {
 } from 'draft-js';
 
 import Link, { findLinkEntities } from '../components/entities/link';
+import CoverRequest, { findCoverRequestEntities } from '../components/entities/coverRequest';
 
 
 const defaultDecorators = new CompositeDecorator([
   {
     strategy: findLinkEntities,
     component: Link,
+  },
+  {
+    strategy: findCoverRequestEntities,
+    component: CoverRequest,
   },
 ]);
 

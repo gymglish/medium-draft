@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import ReactAutocomplete from 'react-autocomplete';
+
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
 
@@ -23,6 +25,10 @@ export default class Toolbar extends React.Component {
     editorNode: PropTypes.object,
     setLink: PropTypes.func,
     focus: PropTypes.func,
+    displayCoverRequest: PropTypes.bool,
+    setCoverRequest: PropTypes.func,
+    autocompleteItems: PropTypes.arrayOf(PropTypes.shape()),
+    onAutocompleteSelect: PropTypes.func,
   };
 
   static defaultProps = {
@@ -34,13 +40,17 @@ export default class Toolbar extends React.Component {
     super(props);
     this.state = {
       showURLInput: false,
+      showCoverInput: false,
       urlInputValue: '',
+      coverInputValue: '',
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleLinkInput = this.handleLinkInput.bind(this);
     this.hideLinkInput = this.hideLinkInput.bind(this);
+
+    this.handleCoverInput = this.handleCoverInput.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -56,6 +66,12 @@ export default class Toolbar extends React.Component {
           urlInputValue: '',
         });
       }
+      if (this.state.showCoverInput) {
+        this.setState({
+          showCoverInput: false,
+          coverInputValue: '',
+        });
+      }
       return;
     }
   }
@@ -69,7 +85,7 @@ export default class Toolbar extends React.Component {
   // }
 
   componentDidUpdate() {
-    if (!this.props.editorEnabled || this.state.showURLInput) {
+    if (!this.props.editorEnabled || this.state.showURLInput || this.state.showCoverInput) {
       return;
     }
     const selectionState = this.props.editorState.getSelection();
@@ -120,16 +136,21 @@ export default class Toolbar extends React.Component {
     if (e.which === 13) {
       e.preventDefault();
       e.stopPropagation();
-      this.props.setLink(this.state.urlInputValue);
+      if (this.state.showURLInput) {
+        this.props.setLink(this.state.urlInputValue);
+      } else if (this.state.showCoverInput) {
+        this.props.setCoverRequest(this.state.coverInputValue);
+      }
       this.hideLinkInput();
     } else if (e.which === 27) {
       this.hideLinkInput();
     }
   }
 
-  onChange(e) {
+  onChange = (field) => (e) => {
+    const value = field === 'coverInputValue' ? e.target.value.toUpperCase().replace(/ /g, '-').replace(/[^\w-]/gi, '') : e.target.value;
     this.setState({
-      urlInputValue: e.target.value,
+      [field]: value,
     });
   }
 
@@ -183,6 +204,56 @@ export default class Toolbar extends React.Component {
     }
   }
 
+  handleCoverInput(e, direct = false) {
+    if (direct !== true) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const { editorState } = this.props;
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      this.props.focus();
+      return;
+    }
+    const currentBlock = getCurrentBlock(editorState);
+    let selectedEntity = '';
+    let coverFound = false;
+    currentBlock.findEntityRanges((character) => {
+      const entityKey = character.getEntity();
+      selectedEntity = entityKey;
+      return entityKey !== null && editorState.getCurrentContent().getEntity(entityKey).getType() === Entity.COVER_REQUEST;
+    }, (start, end) => {
+      let selStart = selection.getAnchorOffset();
+      let selEnd = selection.getFocusOffset();
+      if (selection.getIsBackward()) {
+        selStart = selection.getFocusOffset();
+        selEnd = selection.getAnchorOffset();
+      }
+      if (start === selStart && end === selEnd) {
+        coverFound = true;
+        const { cover } = editorState.getCurrentContent().getEntity(selectedEntity).getData();
+        this.setState({
+          showCoverInput: true,
+          coverInputValue: cover,
+        }, () => {
+          setTimeout(() => {
+            this.coverinput.focus();
+            this.coverinput.select();
+          }, 0);
+        });
+      }
+    });
+    if (!coverFound) {
+      this.setState({
+        showCoverInput: true,
+      }, () => {
+        setTimeout(() => {
+          this.coverinput.focus();
+        }, 0);
+      });
+    }
+  }
+
   hideLinkInput(e = null) {
     if (e !== null) {
       e.preventDefault();
@@ -190,14 +261,23 @@ export default class Toolbar extends React.Component {
     }
     this.setState({
       showURLInput: false,
+      showCoverInput: false,
       urlInputValue: '',
+      coverInputValue: '',
     }, this.props.focus
     );
   }
 
   render() {
-    const { editorState, editorEnabled, inlineButtons } = this.props;
-    const { showURLInput, urlInputValue } = this.state;
+    const {
+      editorState,
+      editorEnabled,
+      inlineButtons,
+      displayCoverRequest,
+      autocompleteItems,
+      // onAutocompleteSelect,
+    } = this.props;
+    const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
       isOpen = false;
@@ -219,9 +299,60 @@ export default class Toolbar extends React.Component {
               type="text"
               className="md-url-input"
               onKeyDown={this.onKeyDown}
-              onChange={this.onChange}
-              placeholder="Press ENTER or ESC"
+              onChange={this.onChange('urlInputValue')}
+              placeholder={'ENTER to accept, ESC to cancel'}
               value={urlInputValue}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (showCoverInput) {
+      let className = `md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`;
+      className += ' md-editor-toolbar--linkinput';
+
+      return (
+        <div
+          className={className}
+        >
+          <div
+            className="md-RichEditor-controls md-RichEditor-show-link-input"
+            style={{ display: 'block' }}
+          >
+            <span className="md-url-input-close" onClick={this.hideLinkInput}>&times;</span>
+            <ReactAutocomplete
+              ref={node => { this.coverinput = node; }}
+              type="text"
+              onChange={this.onChange('coverInputValue')}
+              placeholder={'Begin typing cover name or ENTER to create'}
+              value={coverInputValue}
+              autoHighlight={false}
+              items={autocompleteItems}
+              onSelect={(inputValue, item) => {
+                this.props.setCoverRequest(item.title, true);
+                this.hideLinkInput();
+                // onAutocompleteSelect(inputValue, item);
+              }}
+              shouldItemRender={(item, inputValue) => (item.title ? item.title.includes(inputValue) : false)}
+              getItemValue={item => item.title}
+              inputProps={{
+                onKeyPress: this.onKeyDown,
+                maxLength: 50,
+                className: 'md-url-input',
+              }}
+              renderMenu={(items) => <div>{items}</div>}
+              renderItem={(item, highlighted) =>
+                (<div
+                  key={item._id}
+                  style={{
+                    backgroundColor: highlighted ? '#7a88a9' : 'transparent',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {item.title}
+                </div>)
+              }
             />
           </div>
         </div>
@@ -271,6 +402,19 @@ export default class Toolbar extends React.Component {
             </span>
           </div>
         )}
+        {
+          displayCoverRequest && (
+            <div className="md-RichEditor-controls">
+              <span
+                className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
+                onClick={this.handleCoverInput}
+                aria-label="Add a cover request"
+              >
+                Cover
+              </span>
+            </div>
+          )
+        }
       </div>
     );
   }

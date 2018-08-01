@@ -4,6 +4,7 @@ import { Block } from '../util/constants';
 
 import preData from '../../docs/data.json';
 import Link, { findLinkEntities } from '../components/entities/link';
+import CoverRequest, { findCoverRequestEntities } from '../components/entities/coverRequest';
 
 describe('createEditorState', () => {
   const es = createEditorState();
@@ -18,11 +19,19 @@ describe('createEditorState', () => {
 
   it('adds link decorator by default in CompositeDecorator', () => {
     expect(es.getDecorator()).to.be.instanceof(CompositeDecorator);
-    expect(es.getDecorator()._decorators.length).to.equal(1);
-    expect(es.getDecorator()._decorators[0]).to.deep.equal({
-      strategy: findLinkEntities,
-      component: Link,
-    });
+    expect(es.getDecorator()._decorators.length).to.equal(2);
+    expect(es.getDecorator()._decorators[0]).to.deep.equal(
+      {
+        strategy: findLinkEntities,
+        component: Link,
+      }
+    );
+    expect(es.getDecorator()._decorators[1]).to.deep.equal(
+      {
+        strategy: findCoverRequestEntities,
+        component: CoverRequest,
+      }
+    );
   });
 
   const esContent = createEditorState(preData);
@@ -32,10 +41,18 @@ describe('createEditorState', () => {
     expect(blocks.size).to.be.above(1);
 
     expect(esContent.getDecorator()).to.be.instanceof(CompositeDecorator);
-    expect(esContent.getDecorator()._decorators.length).to.equal(1);
-    expect(esContent.getDecorator()._decorators[0]).to.deep.equal({
-      strategy: findLinkEntities,
-      component: Link,
-    });
+    expect(esContent.getDecorator()._decorators.length).to.equal(2);
+    expect(es.getDecorator()._decorators[0]).to.deep.equal(
+      {
+        strategy: findLinkEntities,
+        component: Link,
+      }
+    );
+    expect(es.getDecorator()._decorators[1]).to.deep.equal(
+      {
+        strategy: findCoverRequestEntities,
+        component: CoverRequest,
+      }
+    );
   });
 });

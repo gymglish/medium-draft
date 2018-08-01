@@ -89,6 +89,10 @@ class MediumDraftEditor extends React.Component {
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
     processURL: PropTypes.func,
+    // New custom props
+    displayCoverRequest: PropTypes.bool,
+    autocompleteItems: PropTypes.arrayOf(PropTypes.shape()),
+    onAutocompleteSelect: PropTypes.func,
   };
 
   static defaultProps = {
@@ -121,6 +125,9 @@ class MediumDraftEditor extends React.Component {
     disableToolbar: false,
     showLinkEditToolbar: true,
     toolbarConfig: {},
+    displayCoverRequest: false,
+    autocompleteItems: [{}],
+    onAutocompleteSelect: () => {},
   };
 
   constructor(props) {
@@ -141,6 +148,9 @@ class MediumDraftEditor extends React.Component {
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+
+    // New customizations
+    this.setCoverRequest = this.setCoverRequest.bind(this);
   }
 
   /**
@@ -218,6 +228,21 @@ class MediumDraftEditor extends React.Component {
     }
     if (newUrl !== '') {
       const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', { url: newUrl });
+      editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+      entityKey = contentWithEntity.getLastCreatedEntityKey();
+    }
+    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
+  }
+
+  setCoverRequest(cover, preexisting = false) {
+    let { editorState } = this.props;
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    let entityKey = null;
+
+    if (cover !== '') {
+      this.props.onAutocompleteSelect(cover, preexisting);
+      const contentWithEntity = content.createEntity(E.COVER_REQUEST, 'MUTABLE', { cover });
       editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
@@ -459,7 +484,7 @@ class MediumDraftEditor extends React.Component {
     });
   };
 
-  editLinkAfterSelection = (blockKey, entityKey = null) => {
+  editLinkAfterSelection = (blockKey, entityKey = null, entityType) => {
     if (entityKey === null) {
       return;
     }
@@ -480,7 +505,11 @@ class MediumDraftEditor extends React.Component {
       this.onChange(newEditorState);
       setTimeout(() => {
         if (this.toolbar) {
-          this.toolbar.handleLinkInput(null, true);
+          if (entityType === E.LINK) {
+            this.toolbar.handleLinkInput(null, true);
+          } else {
+            this.toolbar.handleCoverInput(null, true);
+          }
         }
       }, 100);
     });
@@ -517,7 +546,10 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig } = this.props;
+    const {
+      editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, displayCoverRequest,
+      autocompleteItems, onAutocompleteSelect,
+    } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     let isCursorLink = false;
@@ -567,9 +599,13 @@ class MediumDraftEditor extends React.Component {
               toggleInlineStyle={this.toggleInlineStyle}
               editorEnabled={editorEnabled}
               setLink={this.setLink}
+              setCoverRequest={this.setCoverRequest}
               focus={this.focus}
               blockButtons={blockButtons}
               inlineButtons={inlineButtons}
+              displayCoverRequest={displayCoverRequest}
+              autocompleteItems={autocompleteItems}
+              onAutocompleteSelect={onAutocompleteSelect}
             />
           )}
           {isCursorLink && (

@@ -36,6 +36,7 @@ export const Inline = {
 
 export const Entity = {
   LINK: 'LINK',
+  COVER_REQUEST: 'COVER_REQUEST',
 };
 
 export const HYPERLINK = 'hyperlink';

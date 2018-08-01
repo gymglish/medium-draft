@@ -433,7 +433,6 @@ class MediumDraftEditor extends React.Component {
     return NOT_HANDLED;
   }
 
-
   /*
   The function documented in `draft-js` to be used to toggle block types (mainly
   for some key combinations handled by default inside draft-js).

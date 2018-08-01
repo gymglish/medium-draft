@@ -7,6 +7,7 @@ import {
 
 import Link, { findLinkEntities } from '../components/entities/link';
 import CoverRequest, { findCoverRequestEntities } from '../components/entities/coverRequest';
+import Placeholder, { findPlaceholderEntities } from '../components/entities/placeholder';
 
 
 const defaultDecorators = new CompositeDecorator([
@@ -17,6 +18,10 @@ const defaultDecorators = new CompositeDecorator([
   {
     strategy: findCoverRequestEntities,
     component: CoverRequest,
+  },
+  {
+    strategy: findPlaceholderEntities,
+    component: Placeholder,
   },
 ]);
 

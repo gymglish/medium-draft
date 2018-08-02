@@ -10,7 +10,7 @@ export const findPlaceholderEntities = (contentBlock, callback, contentState) =>
       const entityKey = character.getEntity();
       return (
         entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === Entity.LINK
+        contentState.getEntity(entityKey).getType() === Entity.PLACEHOLDER
       );
     },
     callback

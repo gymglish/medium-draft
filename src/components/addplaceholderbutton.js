@@ -22,7 +22,7 @@ export default class AddPlaceholderButton extends React.Component {
     editorEnabled: PropTypes.bool,
     editorState: PropTypes.object,
     blankText: PropTypes.string,
-    focus: PropTypes.func.isRequired,
+    insertPlaceholder: PropTypes.func.isRequired,
   };
 
   constructor(props) {

@@ -32,7 +32,6 @@ export default class AddPlaceholderButton extends React.Component {
     };
 
     this.renderedOnce = false;
-    this.insertPlaceholder = this.insertPlaceholder.bind(this);
   }
 
   componentDidMount() {
@@ -85,24 +84,8 @@ export default class AddPlaceholderButton extends React.Component {
     this.setState({ style });
   };
 
-  insertPlaceholder(label, meta = '') {
-    const editorState = this.state.editorState;
-    const currentContent = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    if (selection.isCollapsed()) {
-      const entityKey = Entity.create('PLACEHOLDER', 'IMMUTABLE', { meta, content: label });
-      const textWithEntity = Modifier.insertText(currentContent, selection, label, null, entityKey);
-
-      this.setState({
-        editorState: EditorState.push(editorState, textWithEntity, 'insert-characters'),
-      }, () => {
-        this.props.focus();
-      });
-    }
-  }
-
   render() {
-    const { blankText } = this.props;
+    const { blankText, insertPlaceholder } = this.props;
 
     return (
       <div
@@ -113,7 +96,7 @@ export default class AddPlaceholderButton extends React.Component {
         <div className="md-RichEditor-controls">
           <span
             className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-            onClick={() => this.insertPlaceholder(blankText)}
+            onClick={() => insertPlaceholder(blankText)}
             aria-label="Add a blank"
           >
             Add blank

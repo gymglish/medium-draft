@@ -156,6 +156,7 @@ class MediumDraftEditor extends React.Component {
 
     // New customizations
     this.setCoverRequest = this.setCoverRequest.bind(this);
+    this.insertPlaceholder = this.insertPlaceholder.bind(this);
   }
 
   /**
@@ -252,6 +253,23 @@ class MediumDraftEditor extends React.Component {
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
+  }
+
+  insertPlaceholder(label, meta = '') {
+    const { editorState } = this.props;
+    const currentContent = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      const entityKey = currentContent.createEntity('PLACEHOLDER', 'IMMUTABLE', { meta, content: label }).getLastCreatedEntityKey();
+      const textWithEntity = Modifier.insertText(currentContent, selection, label, null, entityKey);
+
+      this.onChange(EditorState.push(editorState, textWithEntity, 'insert-characters'), this.focus);
+      // this.setState({
+      //   editorState: EditorState.push(editorState, textWithEntity, 'insert-characters'),
+      // }, () => {
+      //   this.props.focus();
+      // });
+    }
   }
 
   /**
@@ -601,6 +619,7 @@ class MediumDraftEditor extends React.Component {
               editorEnabled={editorEnabled}
               focus={this.focus}
               blankText={blankText}
+              insertPlaceholder={this.insertPlaceholder}
             />
           }
           {!disableToolbar && (

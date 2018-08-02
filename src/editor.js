@@ -578,6 +578,7 @@ class MediumDraftEditor extends React.Component {
     }
     const blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
     const inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
+    console.log('medium-draft-custom isFocused', isFocused);
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>

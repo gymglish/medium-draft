@@ -131,7 +131,7 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: false,
     autocompleteItems: [{}],
     onAutocompleteSelect: () => {},
-    displayAddPlaceholder: true,
+    displayAddPlaceholder: false,
     blankText: '<blank>',
   };
 

@@ -96,6 +96,7 @@ class MediumDraftEditor extends React.Component {
     onAutocompleteSelect: PropTypes.func,
     displayAddPlaceholder: PropTypes.bool,
     blankText: PropTypes.string,
+    isFocused: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -131,8 +132,9 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: false,
     autocompleteItems: [{}],
     onAutocompleteSelect: () => {},
-    displayAddPlaceholder: false,
+    displayAddPlaceholder: true,
     blankText: '<blank>',
+    isFocused: false,
   };
 
   constructor(props) {
@@ -256,6 +258,7 @@ class MediumDraftEditor extends React.Component {
   }
 
   insertPlaceholder(label, meta = '') {
+    console.log('insertPlaceholder');
     const { editorState } = this.props;
     const currentContent = editorState.getCurrentContent();
     const selection = editorState.getSelection();
@@ -264,11 +267,6 @@ class MediumDraftEditor extends React.Component {
       const textWithEntity = Modifier.insertText(currentContent, selection, label, null, entityKey);
 
       this.onChange(EditorState.push(editorState, textWithEntity, 'insert-characters'), this.focus);
-      // this.setState({
-      //   editorState: EditorState.push(editorState, textWithEntity, 'insert-characters'),
-      // }, () => {
-      //   this.props.focus();
-      // });
     }
   }
 
@@ -570,7 +568,7 @@ class MediumDraftEditor extends React.Component {
   render() {
     const {
       editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, displayCoverRequest,
-      autocompleteItems, onAutocompleteSelect, displayAddPlaceholder, blankText,
+      autocompleteItems, onAutocompleteSelect, displayAddPlaceholder, blankText, isFocused,
     } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
@@ -602,6 +600,7 @@ class MediumDraftEditor extends React.Component {
             keyBindingFn={this.props.keyBindingFn}
             placeholder={this.props.placeholder}
             spellCheck={editorEnabled && this.props.spellCheck}
+            onBlur={() => console.log('blurring')}
           />
           {this.props.sideButtons.length > 0 && showAddButton && (
             <AddButton
@@ -612,7 +611,7 @@ class MediumDraftEditor extends React.Component {
               sideButtons={this.props.sideButtons}
             />
           )}
-          {(displayAddPlaceholder && !isCursorLink) &&
+          {(displayAddPlaceholder && !isCursorLink) && isFocused &&
             <AddPlaceholderButton
               ref={(c) => { this.placeholderbtn = c; }}
               editorState={editorState}

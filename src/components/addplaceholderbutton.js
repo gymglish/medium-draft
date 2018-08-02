@@ -46,8 +46,10 @@ export default class AddPlaceholderButton extends React.Component {
 
   shouldComponentUpdate(newProps) {
     if (this.renderedOnce) {
-      const ret = this.props.editorState.getSelection().getStartKey() !== newProps.editorState.getSelection().getStartKey() ||
-      this.props.editorState.getSelection().getStartOffset() !== newProps.editorState.getSelection().getStartOffset();
+      const ret =
+        // this.props.editorState.getSelection().getHasFocus() !== newProps.editorState.getSelection().getHasFocus() ||
+        this.props.editorState.getSelection().getStartKey() !== newProps.editorState.getSelection().getStartKey() ||
+        this.props.editorState.getSelection().getStartOffset() !== newProps.editorState.getSelection().getStartOffset();
       if (ret) {
         this.renderedOnce = false;
       }
@@ -85,9 +87,9 @@ export default class AddPlaceholderButton extends React.Component {
   };
 
   render() {
-    const { blankText, insertPlaceholder } = this.props;
+    const { blankText, insertPlaceholder, editorState } = this.props;
     // Don't show add blank button if user selected a range
-    if (!this.props.editorState.getSelection().isCollapsed()) return null;
+    if (!editorState.getSelection().isCollapsed()) return null;
 
     return (
       <div
@@ -98,7 +100,7 @@ export default class AddPlaceholderButton extends React.Component {
         <div className="md-RichEditor-controls">
           <span
             className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-            onClick={() => insertPlaceholder(blankText)}
+            onClick={(event) => { event.preventDefault(); event.stopPropagation(); insertPlaceholder(blankText); }}
             aria-label="Add a blank"
           >
             Add blank

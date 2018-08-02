@@ -86,6 +86,8 @@ export default class AddPlaceholderButton extends React.Component {
 
   render() {
     const { blankText, insertPlaceholder } = this.props;
+    // Don't show add blank button if user selected a range
+    if (!this.props.editorState.getSelection().isCollapsed()) return null;
 
     return (
       <div

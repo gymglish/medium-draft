@@ -15,6 +15,7 @@ import { OrderedMap } from 'immutable';
 import AddButton from './components/addbutton';
 import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
 import LinkEditComponent from './components/LinkEditComponent';
+import AddPlaceholderButton from './components/addplaceholderbutton';
 
 import rendererFn from './components/customrenderer';
 import customStyleMap from './util/customstylemap';
@@ -93,6 +94,8 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: PropTypes.bool,
     autocompleteItems: PropTypes.arrayOf(PropTypes.shape()),
     onAutocompleteSelect: PropTypes.func,
+    displayAddPlaceholder: PropTypes.bool,
+    blankText: PropTypes.string,
   };
 
   static defaultProps = {
@@ -128,6 +131,8 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: false,
     autocompleteItems: [{}],
     onAutocompleteSelect: () => {},
+    displayAddPlaceholder: true,
+    blankText: '<blank>',
   };
 
   constructor(props) {
@@ -547,7 +552,7 @@ class MediumDraftEditor extends React.Component {
   render() {
     const {
       editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, displayCoverRequest,
-      autocompleteItems, onAutocompleteSelect,
+      autocompleteItems, onAutocompleteSelect, displayAddPlaceholder, blankText,
     } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
@@ -589,6 +594,15 @@ class MediumDraftEditor extends React.Component {
               sideButtons={this.props.sideButtons}
             />
           )}
+          {(displayAddPlaceholder && !isCursorLink) &&
+            <AddPlaceholderButton
+              ref={(c) => { this.placeholderbtn = c; }}
+              editorState={editorState}
+              editorEnabled={editorEnabled}
+              focus={this.focus}
+              blankText={blankText}
+            />
+          }
           {!disableToolbar && (
             <Toolbar
               ref={(c) => { this.toolbar = c; }}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getVisibleSelectionRect, EditorState, Modifier, Entity } from 'draft-js';
+import { getVisibleSelectionRect } from 'draft-js';
 
 const getRelativeParent = (element) => {
   if (!element) {

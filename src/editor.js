@@ -132,7 +132,7 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: false,
     autocompleteItems: [{}],
     onAutocompleteSelect: () => {},
-    displayAddPlaceholder: true,
+    displayAddPlaceholder: false,
     blankText: '<blank>',
     isFocused: false,
   };
@@ -612,7 +612,7 @@ class MediumDraftEditor extends React.Component {
               sideButtons={this.props.sideButtons}
             />
           )}
-          {(displayAddPlaceholder && !isCursorLink) && isFocused &&
+          {displayAddPlaceholder && !isCursorLink &&
             <AddPlaceholderButton
               ref={(c) => { this.placeholderbtn = c; }}
               editorState={editorState}

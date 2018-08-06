@@ -1,3 +1,4 @@
+import { RichUtils, convertToRaw, convertFromRaw, EditorState, SelectionState } from 'draft-js';
 import Editor from './editor';
 
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
@@ -52,6 +53,12 @@ export {
   BreakBlock,
   ImageSideButton,
   BreakSideButton,
+  // draft-js exports
+  RichUtils,
+  convertToRaw,
+  convertFromRaw,
+  EditorState,
+  SelectionState,
 };
 
 export default Editor;

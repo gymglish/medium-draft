@@ -53,7 +53,6 @@
     "babel-preset-react": "^6.5.0",
     "chai": "^3.5.0",
     "css-loader": "^0.23.1",
-    "draft-convert": "^2.0.0",
     "enzyme": "^2.8.2",
     "eslint": "^3.3.1",
     "eslint-config-airbnb": "^10.0.1",

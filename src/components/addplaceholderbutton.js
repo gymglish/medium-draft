@@ -35,7 +35,7 @@ export default class AddPlaceholderButton extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(this.calculatePosition, 0);
+    setTimeout(this.setNewPosition(this.calculatePosition()), 0);
   }
 
   componentWillReceiveProps(newProps) {
@@ -46,23 +46,27 @@ export default class AddPlaceholderButton extends React.Component {
 
   shouldComponentUpdate(newProps) {
     if (this.renderedOnce) {
-      const ret =
-        // this.props.editorState.getSelection().getHasFocus() !== newProps.editorState.getSelection().getHasFocus() ||
+      const cursorPositionChanged =
         this.props.editorState.getSelection().getStartKey() !== newProps.editorState.getSelection().getStartKey() ||
         this.props.editorState.getSelection().getStartOffset() !== newProps.editorState.getSelection().getStartOffset();
-      if (ret) {
+      if (!cursorPositionChanged) {
         this.renderedOnce = false;
       }
-      return ret;
+      return cursorPositionChanged;
     }
     this.renderedOnce = true;
     return true;
   }
 
   componentDidUpdate() {
-    setTimeout(this.calculatePosition, 0);
+    setTimeout(this.setNewPosition(this.calculatePosition()), 0);
   }
 
+  setNewPosition(style = {}) {
+    this.setState({ style });
+  }
+
+  /* eslint-disable consistent-return */
   calculatePosition = () => {
     if (!this.toolbar) {
       return;
@@ -78,13 +82,14 @@ export default class AddPlaceholderButton extends React.Component {
     }
 
     const style = {
-      top: (selectionRect.top - relativeRect.top) + 35,
+      top: (selectionRect.top - relativeRect.top) - 35,
       left: (selectionRect.left - relativeRect.left) + (selectionRect.width / 2),
       transform: 'translate(-50%) scale(1)',
     };
 
-    this.setState({ style });
+    return style;
   };
+  /* eslint-enable */
 
   render() {
     const { blankText, insertPlaceholder, editorState } = this.props;
@@ -93,7 +98,7 @@ export default class AddPlaceholderButton extends React.Component {
 
     return (
       <div
-        className="md-editor-toolbar md-editor-toolbar--isopen md-editor-toolbar-edit-link md-editor-toolbar-add-blank"
+        className="md-editor-toolbar md-editor-toolbar--isopen md-editor-toolbar-add-blank"
         style={this.state.style}
         ref={node => { this.toolbar = node; }}
       >

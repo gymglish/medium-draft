@@ -17,11 +17,22 @@ export const findPlaceholderEntities = (contentBlock, callback, contentState) =>
   );
 };
 
-const Placeholder = (props) => {
-  const { contentState, entityKey } = props;
-  const { content } = contentState.getEntity(entityKey).getData();
-  return <input type="text" disabled value={content} size={content.length} />;
-};
+const Placeholder = (props) => (
+  <span
+    style={{
+      border: '1px solid #9b9b9b',
+      backgroundColor: '#f5f5f5',
+      color: '#f5f5f5',
+      margin: '0 5px',
+      display: 'inline-block',
+      width: 100,
+      userSelect: 'none',
+    }}
+    contentEditable={false}
+  >
+    {props.children}
+  </span>
+);
 
 Placeholder.propTypes = {
   children: PropTypes.node,

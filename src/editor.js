@@ -133,7 +133,7 @@ class MediumDraftEditor extends React.Component {
     autocompleteItems: [{}],
     onAutocompleteSelect: () => {},
     displayAddPlaceholder: false,
-    blankText: '<blank>',
+    blankText: '[blank]',
     isFocused: false,
   };
 
@@ -257,13 +257,12 @@ class MediumDraftEditor extends React.Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
 
-  insertPlaceholder(label, meta = '') {
-    console.log('insertPlaceholder');
+  insertPlaceholder(label = '') {
     const { editorState } = this.props;
     const currentContent = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
-      const entityKey = currentContent.createEntity('PLACEHOLDER', 'IMMUTABLE', { meta, content: label }).getLastCreatedEntityKey();
+      const entityKey = currentContent.createEntity('PLACEHOLDER', 'IMMUTABLE', { content: label }).getLastCreatedEntityKey();
       const textWithEntity = Modifier.insertText(currentContent, selection, label, null, entityKey);
 
       this.onChange(EditorState.push(editorState, textWithEntity, 'insert-characters'), this.focus);
@@ -578,8 +577,7 @@ class MediumDraftEditor extends React.Component {
     }
     const blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
     const inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
-    console.log('medium-draft-custom isFocused', isFocused);
-    console.log('live changes');
+
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
@@ -602,7 +600,6 @@ class MediumDraftEditor extends React.Component {
             keyBindingFn={this.props.keyBindingFn}
             placeholder={this.props.placeholder}
             spellCheck={editorEnabled && this.props.spellCheck}
-            onBlur={() => console.log('blurring')}
           />
           {this.props.sideButtons.length > 0 && showAddButton && (
             <AddButton
@@ -613,7 +610,7 @@ class MediumDraftEditor extends React.Component {
               sideButtons={this.props.sideButtons}
             />
           )}
-          {displayAddPlaceholder && !isCursorLink &&
+          {(displayAddPlaceholder && !isCursorLink) && isFocused &&
             <AddPlaceholderButton
               ref={(c) => { this.placeholderbtn = c; }}
               editorState={editorState}

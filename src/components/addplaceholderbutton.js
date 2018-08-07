@@ -105,7 +105,7 @@ export default class AddPlaceholderButton extends React.Component {
         <div className="md-RichEditor-controls">
           <span
             className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-            onClick={(event) => { event.preventDefault(); event.stopPropagation(); insertPlaceholder(blankText); }}
+            onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); insertPlaceholder(blankText); }}
             aria-label="Add a blank"
           >
             Add blank

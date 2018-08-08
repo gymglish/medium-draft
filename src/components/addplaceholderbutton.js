@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import { getVisibleSelectionRect } from 'draft-js';
 
@@ -29,6 +30,7 @@ export default class AddPlaceholderButton extends React.Component {
     super(props);
     this.state = {
       style: {},
+      expanded: false,
     };
 
     this.renderedOnce = false;
@@ -91,8 +93,21 @@ export default class AddPlaceholderButton extends React.Component {
   };
   /* eslint-enable */
 
+  toggleExpansion = (e) => {
+    e.preventDefault();
+    this.setState({ expanded: !this.state.expanded });
+  }
+
+  handleInsertPlaceholder = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.toggleExpansion(e);
+    this.props.insertPlaceholder(this.props.blankText);
+  }
+
   render() {
-    const { blankText, insertPlaceholder, editorState } = this.props;
+    const { editorState } = this.props;
+    const { expanded } = this.state;
     // Don't show add blank button if user selected a range
     if (!editorState.getSelection().isCollapsed()) return null;
 
@@ -105,11 +120,27 @@ export default class AddPlaceholderButton extends React.Component {
         <div className="md-RichEditor-controls">
           <span
             className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-            onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); insertPlaceholder(blankText); }}
-            aria-label="Add a blank"
+            onMouseDown={(e) => this.toggleExpansion(e)}
+            aria-label="Add a bracket"
           >
-            Add blank
+            +
           </span>
+          {expanded &&
+            <CSSTransitionGroup
+              transitionName="md-example"
+              transitionEnterTimeout={200}
+              transitionLeaveTimeout={100}
+              transitionAppearTimeout={100}
+              transitionAppear
+            >
+              <span
+                className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
+                onMouseDown={(e) => this.handleInsertPlaceholder(e)}
+              >
+                Add a bracket
+              </span>
+            </CSSTransitionGroup>
+          }
         </div>
       </div>
     );

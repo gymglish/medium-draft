@@ -1,4 +1,4 @@
-import { RichUtils, convertToRaw, convertFromRaw, EditorState, SelectionState } from 'draft-js';
+import { RichUtils, convertToRaw, convertFromRaw, EditorState, SelectionState, Modifier } from 'draft-js';
 import Editor from './editor';
 
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
@@ -59,6 +59,7 @@ export {
   convertFromRaw,
   EditorState,
   SelectionState,
+  Modifier,
 };
 
 export default Editor;

@@ -3,7 +3,6 @@ import React from 'react';
 
 import { Entity } from '../../util/constants';
 
-
 export const findPlaceholderEntities = (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(
     (character) => {
@@ -19,16 +18,8 @@ export const findPlaceholderEntities = (contentBlock, callback, contentState) =>
 
 const Placeholder = (props) => (
   <span
-    style={{
-      border: '1px solid #9b9b9b',
-      backgroundColor: '#f5f5f5',
-      color: '#f5f5f5',
-      margin: '0 5px',
-      display: 'inline-block',
-      width: 100,
-      userSelect: 'none',
-    }}
     contentEditable={false}
+    className="md-bracket-placeholder"
   >
     {props.children}
   </span>

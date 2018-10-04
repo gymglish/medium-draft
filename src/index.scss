@@ -78,3 +78,13 @@
     display: block;
   }
 }
+
+.md-bracket-placeholder {
+  border: 1px solid #9b9b9b;
+  background-color: #f5f5f5;
+  color: #f5f5f5;
+  margin: 0 5px;
+  display: inline-block;
+  width: 100px;
+  user-select: none;
+}

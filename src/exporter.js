@@ -6,17 +6,17 @@ import { Inline, Block, Entity } from './util/constants';
 export const styleToHTML = (style) => {
   switch (style) {
     case Inline.ITALIC:
-      return <em className={`md-inline-${style.toLowerCase()}`} />;
+      return <em />;
     case Inline.BOLD:
-      return <strong className={`md-inline-${style.toLowerCase()}`} />;
+      return <strong />;
     case Inline.STRIKETHROUGH:
-      return <strike className={`md-inline-${style.toLowerCase()}`} />;
+      return <strike />;
     case Inline.UNDERLINE:
-      return <u className={`md-inline-${style.toLowerCase()}`} />;
+      return <u />;
     case Inline.HIGHLIGHT:
-      return <span className={`md-inline-${style.toLowerCase()}`} />;
+      return <span />;
     case Inline.CODE:
-      return <code className={`md-inline-${style.toLowerCase()}`} />;
+      return <code />;
     default:
       return null;
   }
@@ -27,42 +27,37 @@ export const blockToHTML = (block) => {
   switch (blockType) {
     case Block.H1:
       // eslint-disable-next-line jsx-a11y/heading-has-content
-      return <h1 className={`md-block-${blockType.toLowerCase()}`} />;
+      return <h1 />;
     case Block.H2:
       // eslint-disable-next-line jsx-a11y/heading-has-content
-      return <h2 className={`md-block-${blockType.toLowerCase()}`} />;
+      return <h2 />;
     case Block.H3:
       // eslint-disable-next-line jsx-a11y/heading-has-content
-      return <h3 className={`md-block-${blockType.toLowerCase()}`} />;
+      return <h3 />;
     case Block.H4:
       // eslint-disable-next-line jsx-a11y/heading-has-content
-      return <h4 className={`md-block-${blockType.toLowerCase()}`} />;
+      return <h4 />;
     case Block.H5:
       // eslint-disable-next-line jsx-a11y/heading-has-content
-      return <h5 className={`md-block-${blockType.toLowerCase()}`} />;
+      return <h5 />;
     case Block.H6:
       // eslint-disable-next-line jsx-a11y/heading-has-content
-      return <h6 className={`md-block-${blockType.toLowerCase()}`} />;
+      return <h6 />;
     case Block.BLOCKQUOTE_CAPTION:
     case Block.CAPTION:
       return {
-        start: `<p class="md-block-${blockType.toLowerCase()}"><caption>`,
+        start: '<p><caption>',
         end: '</caption></p>',
       };
     case Block.IMAGE: {
       const imgData = block.data;
-      const text = block.text;
-      const extraClass = (text.length > 0 ? ' md-block-image-has-caption' : '');
       return {
-        start: `<figure class="md-block-image${extraClass}"><img src="${imgData.src}" alt="${block.text}" /><figcaption className="md-block-image-caption">`,
+        start: `<figure><img src="${imgData.src}" alt="${block.text}" /><figcaption className="md-block-image-caption">`,
         end: '</figcaption></figure>',
       };
     }
     case Block.ATOMIC:
-      return {
-        start: `<figure class="md-block-${blockType.toLowerCase()}">`,
-        end: '</figure>',
-      };
+      return <figure />;
     case Block.TODO: {
       const checked = block.data.checked || false;
       let inp = '';
@@ -80,24 +75,24 @@ export const blockToHTML = (block) => {
       };
     }
     case Block.BREAK:
-      return <hr className={`md-block-${blockType.toLowerCase()}`} />;
+      return <hr />;
     case Block.BLOCKQUOTE:
-      return <blockquote className={`md-block-${blockType.toLowerCase()}`} />;
+      return <blockquote />;
     case Block.OL:
       return {
         element: <li />,
-        nest: <ol className={`md-block-${blockType.toLowerCase()}`} />,
+        nest: <ol />,
       };
     case Block.UL:
       return {
         element: <li />,
-        nest: <ul className={`md-block-${blockType.toLowerCase()}`} />,
+        nest: <ul />,
       };
     case Block.UNSTYLED:
       if (block.text.length < 1) {
-        return <p className={`md-block-${blockType.toLowerCase()}`}><br /></p>;
+        return <p><br /></p>;
       }
-      return <p className={`md-block-${blockType.toLowerCase()}`} />;
+      return <p />;
     default: return null;
   }
 };
@@ -107,7 +102,6 @@ export const entityToHTML = (entity, originalText) => {
   if (entity.type === Entity.LINK) {
     return (
       <a
-        className="md-inline-link"
         href={entity.data.url}
         target="_blank"
         rel="noopener noreferrer"

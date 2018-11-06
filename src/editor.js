@@ -8,6 +8,7 @@ import {
   ContentBlock,
   genKey,
   Modifier,
+  convertToRaw,
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 import { OrderedMap } from 'immutable';
@@ -141,7 +142,7 @@ class MediumDraftEditor extends React.Component {
     super(props);
 
     this.focus = () => this._editorNode.focus();
-    this.onChange = (editorState, cb) => {
+    this.onChange = (editorState, cb = () => {}) => {
       this.props.onChange(editorState, cb);
     };
 
@@ -262,10 +263,37 @@ class MediumDraftEditor extends React.Component {
     const currentContent = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
+      // Insert placeholder entity
       const entityKey = currentContent.createEntity('PLACEHOLDER', 'IMMUTABLE', { content: label }).getLastCreatedEntityKey();
       const textWithEntity = Modifier.insertText(currentContent, selection, label, null, entityKey);
 
-      this.onChange(EditorState.push(editorState, textWithEntity, 'insert-characters'), this.focus);
+      let newEditorState = EditorState.push(editorState, textWithEntity, 'insert-characters');
+
+      // Get some meta info to check if entity
+      // is at the end of a block
+      const blockKey = selection.getAnchorKey();
+      const offset = selection.getAnchorOffset();
+      const currentContentJson = convertToRaw(currentContent);
+      const blockToUpdate = currentContentJson.blocks.find(block => block.key === blockKey);
+
+      // If the entity is at the end of a block, we need
+      // to insert a space to avoid a shitty bug that moves the caret to the
+      // far end of the input
+      if (blockToUpdate.text.length === offset) {
+        const updateSelection = new SelectionState({
+          anchorKey: selection.getAnchorKey(),
+          anchorOffset: selection.getAnchorOffset() + label.length,
+          focusKey: selection.getAnchorKey(),
+          focusOffset: selection.getFocusOffset() + label.length,
+          isBackward: selection.getIsBackward(),
+          hasFocus: selection.getHasFocus(),
+        });
+
+        const textWithExtraSpace = Modifier.insertText(newEditorState.getCurrentContent(), updateSelection, ' ');
+        newEditorState = EditorState.push(newEditorState, textWithExtraSpace, 'insert-characters');
+      }
+
+      this.onChange(newEditorState, this.focus);
     }
   }
 

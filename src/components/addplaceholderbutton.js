@@ -32,12 +32,10 @@ export default class AddPlaceholderButton extends React.Component {
       style: {},
       expanded: false,
     };
-
-    this.renderedOnce = false;
   }
 
   componentDidMount() {
-    setTimeout(this.setNewPosition(this.calculatePosition()), 0);
+    setTimeout(() => this.calculatePosition(), 0);
   }
 
   componentWillReceiveProps(newProps) {
@@ -46,52 +44,34 @@ export default class AddPlaceholderButton extends React.Component {
     }
   }
 
-  shouldComponentUpdate(newProps) {
-    if (this.renderedOnce) {
-      const cursorPositionChanged =
-        this.props.editorState.getSelection().getStartKey() !== newProps.editorState.getSelection().getStartKey() ||
-        this.props.editorState.getSelection().getStartOffset() !== newProps.editorState.getSelection().getStartOffset();
-      if (!cursorPositionChanged) {
-        this.renderedOnce = false;
-      }
-      return cursorPositionChanged;
-    }
-    this.renderedOnce = true;
-    return true;
-  }
-
   componentDidUpdate() {
-    setTimeout(this.setNewPosition(this.calculatePosition()), 0);
+    setTimeout(() => this.calculatePosition(), 0);
   }
 
   setNewPosition(style = {}) {
     this.setState({ style });
   }
 
-  /* eslint-disable consistent-return */
   calculatePosition = () => {
-    if (!this.toolbar) {
-      return;
+    if (this.toolbar) {
+      const relativeParent = getRelativeParent(this.toolbar.parentElement);
+      const relativeRect = relativeParent ? relativeParent.getBoundingClientRect() : window.document.body.getBoundingClientRect();
+
+      const selectionRect = getVisibleSelectionRect(window);
+
+      if (selectionRect) {
+        const style = {
+          top: (selectionRect.top - relativeRect.top) - 35,
+          left: (selectionRect.left - relativeRect.left) + (selectionRect.width / 2),
+          transform: 'translate(-50%) scale(1)',
+        };
+
+        if (style !== this.state.style) {
+          this.setNewPosition(style);
+        }
+      }
     }
-
-    const relativeParent = getRelativeParent(this.toolbar.parentElement);
-    const relativeRect = relativeParent ? relativeParent.getBoundingClientRect() : window.document.body.getBoundingClientRect();
-
-    const selectionRect = getVisibleSelectionRect(window);
-
-    if (!selectionRect) {
-      return;
-    }
-
-    const style = {
-      top: (selectionRect.top - relativeRect.top) - 35,
-      left: (selectionRect.left - relativeRect.left) + (selectionRect.width / 2),
-      transform: 'translate(-50%) scale(1)',
-    };
-
-    return style;
   };
-  /* eslint-enable */
 
   toggleExpansion = (e) => {
     e.preventDefault();

@@ -263,11 +263,7 @@ class MediumDraftEditor extends React.Component {
     const currentContent = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
-      // Insert placeholder entity
-      const entityKey = currentContent.createEntity('PLACEHOLDER', 'IMMUTABLE', { content: label }).getLastCreatedEntityKey();
-      const textWithEntity = Modifier.insertText(currentContent, selection, label, null, entityKey);
-
-      let newEditorState = EditorState.push(editorState, textWithEntity, 'insert-characters');
+      let newEditorState = editorState;
 
       // Get some meta info to check if entity
       // is at the end of a block
@@ -276,17 +272,47 @@ class MediumDraftEditor extends React.Component {
       const currentContentJson = convertToRaw(currentContent);
       const blockToUpdate = currentContentJson.blocks.find(block => block.key === blockKey);
 
+      // If the user is trying to insert a new line right next to a placeholder
+      // we need to add a space to avoid _yet another_ shitty bug
+      // that doesn't allow the user to type next to it
+      if (blockToUpdate.text.length === offset) {
+        if (blockToUpdate.text.substring(blockToUpdate.text.length - 1) === '\n') {
+          const updateSelection = new SelectionState({
+            anchorKey: newEditorState.getSelection().getAnchorKey(),
+            anchorOffset: newEditorState.getSelection().getAnchorOffset() + label.length,
+            focusKey: newEditorState.getSelection().getAnchorKey(),
+            focusOffset: newEditorState.getSelection().getFocusOffset() + label.length,
+            isBackward: newEditorState.getSelection().getIsBackward(),
+            hasFocus: newEditorState.getSelection().getHasFocus(),
+          });
+
+          const textWithExtraSpace = Modifier.insertText(newEditorState.getCurrentContent(), updateSelection, ' ');
+          newEditorState = EditorState.push(newEditorState, textWithExtraSpace, 'insert-characters');
+        }
+      }
+
+      // Insert placeholder entity
+      const entityKey = newEditorState.getCurrentContent().createEntity('PLACEHOLDER', 'IMMUTABLE', { content: label }).getLastCreatedEntityKey();
+      const textWithEntity = Modifier.insertText(newEditorState.getCurrentContent(), newEditorState.getSelection(), label, null, entityKey);
+
+      newEditorState = EditorState.push(editorState, textWithEntity, 'insert-characters');
+
+      if (offset === 0) {
+        const textWithExtraSpace = Modifier.insertText(newEditorState.getCurrentContent(), selection, ' ');
+        newEditorState = EditorState.push(newEditorState, textWithExtraSpace, 'insert-characters');
+      }
+
       // If the entity is at the end of a block, we need
       // to insert a space to avoid a shitty bug that moves the caret to the
       // far end of the input
       if (blockToUpdate.text.length === offset) {
         const updateSelection = new SelectionState({
-          anchorKey: selection.getAnchorKey(),
-          anchorOffset: selection.getAnchorOffset() + label.length,
-          focusKey: selection.getAnchorKey(),
-          focusOffset: selection.getFocusOffset() + label.length,
-          isBackward: selection.getIsBackward(),
-          hasFocus: selection.getHasFocus(),
+          anchorKey: newEditorState.getSelection().getAnchorKey(),
+          anchorOffset: newEditorState.getSelection().getAnchorOffset() + label.length,
+          focusKey: newEditorState.getSelection().getAnchorKey(),
+          focusOffset: newEditorState.getSelection().getFocusOffset() + label.length,
+          isBackward: newEditorState.getSelection().getIsBackward(),
+          hasFocus: newEditorState.getSelection().getHasFocus(),
         });
 
         const textWithExtraSpace = Modifier.insertText(newEditorState.getCurrentContent(), updateSelection, ' ');

@@ -85,7 +85,10 @@ export default class Toolbar extends React.Component {
   // }
 
   componentDidUpdate() {
-    if (!this.props.editorEnabled || this.state.showURLInput || this.state.showCoverInput) {
+    if (
+        this.state.showURLInput ||
+        this.state.showCoverInput
+      ) {
       return;
     }
     const selectionState = this.props.editorState.getSelection();
@@ -271,7 +274,6 @@ export default class Toolbar extends React.Component {
   render() {
     const {
       editorState,
-      editorEnabled,
       inlineButtons,
       displayCoverRequest,
       autocompleteItems,
@@ -279,7 +281,7 @@ export default class Toolbar extends React.Component {
     } = this.props;
     const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
-    if (!editorEnabled || editorState.getSelection().isCollapsed()) {
+    if (editorState.getSelection().isCollapsed()) {
       isOpen = false;
     }
     if (showURLInput) {

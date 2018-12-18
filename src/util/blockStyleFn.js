@@ -30,6 +30,12 @@ export default (block) => {
       const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
       return `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
     }
+    case Block.ALIGN_LEFT:
+      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-align-left`;
+    case Block.ALIGN_CENTER:
+      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-align-center`;
+    case Block.ALIGN_RIGHT:
+      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-align-right`;
     default: return BASE_BLOCK_CLASS;
   }
 };

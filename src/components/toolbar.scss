@@ -158,8 +158,16 @@ $toolbar-color: #323845;
   display: inline-block;
   padding: 6px 10px;
 
+  & svg {
+    fill: white !important;
+  }
+
   &:hover {
     color: yellow;
+
+    & svg {
+      fill: yellow !important;
+    }
   }
 
   &:last-child {
@@ -184,8 +192,16 @@ $toolbar-color: #323845;
   color: #50FF4D;
   background: #242933;
 
+  & svg {
+    fill: #50FF4D !important;
+  }
+
   &:hover {
     color: #08c;
+
+    & svg {
+      fill: #08c !important;
+    }
   }
 }
 

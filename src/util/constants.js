@@ -23,6 +23,9 @@ export const Block = {
   TODO: 'todo',
   IMAGE: 'atomic:image',
   BREAK: 'atomic:break',
+  ALIGN_LEFT: 'align-left',
+  ALIGN_CENTER: 'align-center',
+  ALIGN_RIGHT: 'align-right',
 };
 
 export const Inline = {

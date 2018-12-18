@@ -59,6 +59,18 @@
   .md-block {
     margin: 0;
   }
+
+  .md-block.md-block-align-left > div {
+    text-align: left !important;
+  }
+
+  .md-block.md-block-align-center > div {
+    text-align: center !important;
+  }
+
+  .md-block.md-block-align-right > div {
+    text-align: right !important;
+  }
 }
 
 .md-RichEditor-editor .public-DraftStyleDefault-pre {

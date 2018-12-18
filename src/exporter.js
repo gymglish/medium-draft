@@ -93,20 +93,19 @@ export const blockToHTML = (block) => {
         return <p><br /></p>;
       }
       return <p />;
-    case Block.ALIGN_CENTER: 
+    case Block.ALIGN_CENTER:
       return {
         start: '<div style="text-align: center;">',
-        end: '</div>'
+        end: '</div>',
       };
-    case Block.ALIGN_RIGHT: 
+    case Block.ALIGN_RIGHT:
       return {
         start: '<div style="text-align: right;">',
-        end: '</div>'
+        end: '</div>',
       };
     default: return null;
   }
 };
-
 
 export const entityToHTML = (entity, originalText) => {
   if (entity.type === Entity.LINK) {

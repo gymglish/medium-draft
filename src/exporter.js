@@ -17,6 +17,21 @@ export const styleToHTML = (style) => {
       return <span />;
     case Inline.CODE:
       return <code />;
+    case 'FONT_SMALL':
+      return {
+        start: '<span style="font-size: 0.8em">',
+        end: '</span>',
+      };
+    case 'FONT_MEDIUM':
+      return {
+        start: '<span style="font-size: 1em">',
+        end: '</span>',
+      };
+    case 'FONT_LARGE':
+      return {
+        start: '<span style="font-size: 1.2em">',
+        end: '</span>',
+      };
     default:
       return null;
   }

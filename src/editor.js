@@ -24,10 +24,12 @@ import RenderMap from './util/rendermap';
 import keyBindingFn from './util/keybinding';
 import {
   Block,
+  Inline,
   Entity as E,
   HANDLED,
   NOT_HANDLED,
-  KEY_COMMANDS } from './util/constants';
+  KEY_COMMANDS,
+} from './util/constants';
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
 import blockStyleFn from './util/blockStyleFn';
 import {
@@ -529,9 +531,22 @@ class MediumDraftEditor extends React.Component {
   for some key combinations handled by default inside draft-js).
   */
   _toggleInlineStyle(inlineStyle) {
+    let newEditorState = this.props.editorState;
+    const fontSizeStyles = [Inline.FONT_LARGE, Inline.FONT_SMALL];
+    const currentStyle = this.props.editorState.getCurrentInlineStyle().toArray();
+    const intersect = fontSizeStyles.filter(v => currentStyle.includes(v));
+
+    if (fontSizeStyles.includes(inlineStyle) && !!intersect) {
+      if (inlineStyle === Inline.FONT_SMALL && currentStyle.includes(Inline.FONT_LARGE)) {
+        newEditorState = RichUtils.toggleInlineStyle(newEditorState, Inline.FONT_LARGE);
+      } else if (inlineStyle === Inline.FONT_LARGE && currentStyle.includes(Inline.FONT_SMALL)) {
+        newEditorState = RichUtils.toggleInlineStyle(newEditorState, Inline.FONT_SMALL);
+      }
+    }
+
     this.onChange(
       RichUtils.toggleInlineStyle(
-        this.props.editorState,
+        newEditorState,
         inlineStyle
       )
     );

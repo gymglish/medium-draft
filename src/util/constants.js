@@ -35,6 +35,8 @@ export const Inline = {
   STRIKETHROUGH: 'STRIKETHROUGH',
   UNDERLINE: 'UNDERLINE',
   HIGHLIGHT: 'HIGHLIGHT',
+  FONT_SMALL: 'FONT_SMALL',
+  FONT_LARGE: 'FONT_LARGE',
 };
 
 export const Entity = {

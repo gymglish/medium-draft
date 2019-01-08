@@ -393,30 +393,34 @@ export default class Toolbar extends React.Component {
             buttons={this.props.inlineButtons}
           />
         ) : null}
-        {hasHyperLink && (
+        {(hasHyperLink || displayCoverRequest) && (
           <div className="md-RichEditor-controls">
-            <span
-              className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-              onClick={this.handleLinkInput}
-              aria-label={hyperlinkDescription}
-            >
-              {hyperlinkLabel}
-            </span>
+            {
+              hasHyperLink &&
+                <span
+                  className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
+                  onClick={this.handleLinkInput}
+                  aria-label={hyperlinkDescription}
+                >
+                  {hyperlinkLabel} Add a link
+                </span>
+            }
+            {
+              displayCoverRequest &&
+                <span
+                  className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
+                  onClick={this.handleCoverInput}
+                  aria-label="Add a cover request"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" />
+                  </svg>
+                  Grain request
+                </span>
+            }
           </div>
         )}
-        {
-          displayCoverRequest && (
-            <div className="md-RichEditor-controls">
-              <span
-                className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-                onClick={this.handleCoverInput}
-                aria-label="Add a cover request"
-              >
-                Cover
-              </span>
-            </div>
-          )
-        }
       </div>
     );
   }
@@ -494,21 +498,9 @@ export const INLINE_BUTTONS = [
   },
   {
     label: (
-      <svg width="20" height="15" viewBox="0 0 14 14">
-        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-          <g transform="translate(-468.000000, -254.000000)" stroke="#FFFFFF">
-            <g transform="translate(260.000000, 165.000000)">
-              <g transform="translate(0.000000, 75.000000)">
-                <g transform="translate(19.000000, 0.000000)">
-                  <g transform="translate(196.424621, 21.424621) rotate(45.000000) translate(-196.424621, -21.424621) translate(193.424621, 13.924621)">
-                    <path d="M0.5,5.69098301 L0.5,2 C0.5,1.82069363 0.550664909,1.51670417 0.697213595,1.2236068 C0.927818928,0.762396132 1.32141313,0.5 2,0.5 L4,0.5 C4.67858687,0.5 5.07218107,0.762396132 5.3027864,1.2236068 C5.44933509,1.51670417 5.5,1.82069363 5.5,2 L5.5,6 C5.5,6.67858687 5.23760387,7.07218107 4.7763932,7.3027864 C4.53586606,7.42304998 4.28800365,7.47874077 4.1077327,7.49484936 L0.5,5.69098301 Z" />
-                    <path d="M0.5,12.690983 L0.5,9 C0.5,8.82069363 0.550664909,8.51670417 0.697213595,8.2236068 C0.927818928,7.76239613 1.32141313,7.5 2,7.5 L4,7.5 C4.67858687,7.5 5.07218107,7.76239613 5.3027864,8.2236068 C5.44933509,8.51670417 5.5,8.82069363 5.5,9 L5.5,13 C5.5,13.6785869 5.23760387,14.0721811 4.7763932,14.3027864 C4.53586606,14.42305 4.28800365,14.4787408 4.1077327,14.4948494 L0.5,12.690983 Z" transform="translate(3.000000, 11.000000) scale(-1, -1) translate(-3.000000, -11.000000) " />
-                  </g>
-                </g>
-              </g>
-            </g>
-          </g>
-        </g>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />
       </svg>
     ),
     style: HYPERLINK,

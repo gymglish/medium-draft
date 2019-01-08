@@ -41,6 +41,11 @@ $toolbar-color: #323845;
 
   // transition: top 75ms ease-out,left 75ms ease-out;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   &.md-editor-toolbar--isopen {
     visibility: visible;
     // transition: top 75ms ease-out,left 75ms ease-out;
@@ -136,9 +141,13 @@ $toolbar-color: #323845;
   display: inline-block;
   border-right: 1px solid #555;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 
   &.md-RichEditor-show-link-input {
-    padding: 6px 10px;
+    padding: 6px 0px;
   }
 
   &:last-child {
@@ -149,6 +158,12 @@ $toolbar-color: #323845;
     padding: 0 5px;
     color: #fff;
     text-decoration: none;
+
+    & svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
   }
 }
 
@@ -157,6 +172,10 @@ $toolbar-color: #323845;
   cursor: pointer;
   display: inline-block;
   padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 
   & svg {
     fill: white !important;

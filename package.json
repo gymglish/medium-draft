@@ -1,6 +1,6 @@
 {
   "name": "medium-draft-custom",
-  "version": "0.10.6",
+  "version": "0.11.0",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "repository": "https://github.com/desktp/medium-draft",

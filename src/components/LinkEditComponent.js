@@ -105,8 +105,8 @@ export default class LinkEditComponent extends React.Component {
             ? <a href={this.props.data} title={this.props.data} target="_blank" rel="noopener noreferrer">{data}</a>
             : data
         }
-        <button className="md-editor-toolbar-unlink-button" onClick={this.removeLink}>Unlink</button>
-        <button className="md-editor-toolbar-edit-button" onClick={this.editLink}>Edit</button>
+        <button className="md-editor-toolbar-unlink-button" onMouseDown={this.removeLink}>Unlink</button>
+        <button className="md-editor-toolbar-edit-button" onMouseDown={this.editLink}>Edit</button>
       </div>
     );
   }

@@ -347,18 +347,23 @@ export default class Toolbar extends React.Component {
                 maxLength: 50,
                 className: 'md-url-input',
               }}
-              renderMenu={(items) => <div>{items}</div>}
+              renderMenu={(items) => <div style={{ width: '100%', maxHeight: 300, overflow: 'auto' }}>{items}</div>}
               renderItem={(item, highlighted) =>
                 (<div
                   key={item._id}
                   style={{
                     backgroundColor: highlighted ? '#7a88a9' : 'transparent',
                     cursor: 'pointer',
+                    width: '100%',
                   }}
                 >
                   {item.title}
                 </div>)
               }
+              wrapperProps={{
+                onClick: event => event.stopPropagation(),
+                style: { width: '100%' },
+              }}
             />
           </div>
         </div>

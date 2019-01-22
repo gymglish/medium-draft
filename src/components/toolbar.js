@@ -45,6 +45,7 @@ export default class Toolbar extends React.Component {
       showCoverInput: false,
       urlInputValue: '',
       coverInputValue: '',
+      previousCoverId: '',
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
@@ -72,6 +73,7 @@ export default class Toolbar extends React.Component {
         this.setState({
           showCoverInput: false,
           coverInputValue: '',
+          previousCoverId: '',
         });
       }
       return;
@@ -144,7 +146,7 @@ export default class Toolbar extends React.Component {
       if (this.state.showURLInput) {
         this.props.setLink(this.state.urlInputValue);
       } else if (this.state.showCoverInput) {
-        this.props.setCoverRequest(this.state.coverInputValue);
+        this.props.setCoverRequest(this.state.coverInputValue, null, null, this.state.previousCoverId);
       }
       this.hideLinkInput();
     } else if (e.which === 27) {
@@ -236,10 +238,11 @@ export default class Toolbar extends React.Component {
       }
       if (start === selStart && end === selEnd) {
         coverFound = true;
-        const { cover } = editorState.getCurrentContent().getEntity(selectedEntity).getData();
+        const { cover, _id } = editorState.getCurrentContent().getEntity(selectedEntity).getData();
         this.setState({
           showCoverInput: true,
           coverInputValue: cover,
+          previousCoverId: _id,
         }, () => {
           setTimeout(() => {
             this.coverinput.focus();
@@ -269,6 +272,7 @@ export default class Toolbar extends React.Component {
       showCoverInput: false,
       urlInputValue: '',
       coverInputValue: '',
+      previousCoverId: '',
     }, this.props.focus
     );
   }
@@ -336,7 +340,7 @@ export default class Toolbar extends React.Component {
               autoHighlight={false}
               items={autocompleteItems}
               onSelect={(inputValue, item) => {
-                this.props.setCoverRequest(item.title, item._id, true);
+                this.props.setCoverRequest(item.title, item._id, true, this.state.previousCoverId);
                 this.hideLinkInput();
                 // onAutocompleteSelect(inputValue, item);
               }}

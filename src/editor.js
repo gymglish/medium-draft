@@ -101,6 +101,10 @@ class MediumDraftEditor extends React.Component {
     displayAddPlaceholder: PropTypes.bool,
     blankText: PropTypes.string,
     isFocused: PropTypes.bool,
+    addLinkLabel: PropTypes.string,
+    addGrainRequestLabel: PropTypes.string,
+    unlinkLabel: PropTypes.string,
+    editLabel: PropTypes.string,
   };
 
   static defaultProps = {
@@ -164,7 +168,6 @@ class MediumDraftEditor extends React.Component {
     // New customizations
     this.setCoverRequest = this.setCoverRequest.bind(this);
     this.insertPlaceholder = this.insertPlaceholder.bind(this);
-    // // this.onRemoveCoverRequest = this.onRemoveCoverRequest.bind(this);
     this.removeLink = this.removeLink.bind(this);
   }
 
@@ -648,6 +651,7 @@ class MediumDraftEditor extends React.Component {
     const {
       editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, displayCoverRequest,
       autocompleteItems, onAutocompleteSelect, displayAddPlaceholder, blankText, isFocused,
+      addLinkLabel, addGrainRequestLabel, unlinkLabel, editLabel,
     } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
@@ -716,6 +720,8 @@ class MediumDraftEditor extends React.Component {
               displayCoverRequest={displayCoverRequest}
               autocompleteItems={autocompleteItems}
               onAutocompleteSelect={onAutocompleteSelect}
+              addLinkLabel={addLinkLabel}
+              addGrainRequestLabel={addGrainRequestLabel}
             />
           )}
           {isCursorLink && (
@@ -724,6 +730,8 @@ class MediumDraftEditor extends React.Component {
               editorState={editorState}
               removeLink={this.removeLink}
               editLink={this.editLinkAfterSelection}
+              unlinkLabel={unlinkLabel}
+              editLabel={editLabel}
             />)}
         </div>
       </div>

@@ -27,6 +27,8 @@ export default class LinkEditComponent extends React.Component {
     entityType: PropTypes.string.isRequired,
     removeLink: PropTypes.func.isRequired,
     editLink: PropTypes.func.isRequired,
+    unlinkLabel: PropTypes.string,
+    editLabel: PropTypes.string,
   };
 
   constructor(props) {
@@ -105,8 +107,8 @@ export default class LinkEditComponent extends React.Component {
             ? <a href={this.props.data} title={this.props.data} target="_blank" rel="noopener noreferrer">{data}</a>
             : data
         }
-        <button className="md-editor-toolbar-unlink-button" onMouseDown={this.removeLink}>Unlink</button>
-        <button className="md-editor-toolbar-edit-button" onMouseDown={this.editLink}>Edit</button>
+        <button className="md-editor-toolbar-unlink-button" onMouseDown={this.removeLink}>{this.props.unlinkLabel}</button>
+        <button className="md-editor-toolbar-edit-button" onMouseDown={this.editLink}>{this.props.editLabel}</button>
       </div>
     );
   }

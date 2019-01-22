@@ -29,6 +29,8 @@ export default class Toolbar extends React.Component {
     setCoverRequest: PropTypes.func,
     autocompleteItems: PropTypes.arrayOf(PropTypes.shape()),
     onAutocompleteSelect: PropTypes.func,
+    addLinkLabel: PropTypes.string,
+    addGrainRequestLabel: PropTypes.string,
   };
 
   static defaultProps = {
@@ -278,6 +280,8 @@ export default class Toolbar extends React.Component {
       displayCoverRequest,
       autocompleteItems,
       // onAutocompleteSelect,
+      addLinkLabel,
+      addGrainRequestLabel,
     } = this.props;
     const { showURLInput, urlInputValue, showCoverInput, coverInputValue } = this.state;
     let isOpen = true;
@@ -362,15 +366,11 @@ export default class Toolbar extends React.Component {
     }
     let hasHyperLink = false;
     let hyperlinkLabel = '#';
-    let hyperlinkDescription = 'Add a link';
     for (let cnt = 0; cnt < inlineButtons.length; cnt++) {
       if (inlineButtons[cnt].style === HYPERLINK) {
         hasHyperLink = true;
         if (inlineButtons[cnt].label) {
           hyperlinkLabel = inlineButtons[cnt].label;
-        }
-        if (inlineButtons[cnt].description) {
-          hyperlinkDescription = inlineButtons[cnt].description;
         }
         break;
       }
@@ -400,9 +400,9 @@ export default class Toolbar extends React.Component {
                 <span
                   className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
                   onClick={this.handleLinkInput}
-                  aria-label={hyperlinkDescription}
+                  aria-label={addLinkLabel}
                 >
-                  {hyperlinkLabel} Add a link
+                  {hyperlinkLabel} {addLinkLabel}
                 </span>
             }
             {
@@ -410,13 +410,13 @@ export default class Toolbar extends React.Component {
                 <span
                   className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
                   onClick={this.handleCoverInput}
-                  aria-label="Add a cover request"
+                  aria-label={addGrainRequestLabel}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" />
                   </svg>
-                  Grain request
+                  {addGrainRequestLabel}
                 </span>
             }
           </div>

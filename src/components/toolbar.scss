@@ -46,6 +46,10 @@ $toolbar-color: #323845;
   justify-content: center;
   align-items: center;
 
+  *.md-editor-toolbar-horizontal {
+    flex-direction: row;
+  }
+
   &.md-editor-toolbar--isopen {
     visibility: visible;
     // transition: top 75ms ease-out,left 75ms ease-out;
@@ -101,6 +105,7 @@ $toolbar-color: #323845;
   padding: 4px 5px;
   font-size: 0.8em;
   width: 320px;
+  flex-direction: row;
 
   a {
     color: #fff;
@@ -117,14 +122,13 @@ $toolbar-color: #323845;
     background: none;
     border: none;
     color: #fff;
-    float: right;
     display: inline-block;
     padding: 0 5px;
     margin: 5px 0;
     cursor: pointer;
 
     &.md-editor-toolbar-edit-button {
-      border-right: 1px solid #fff;
+      border-left: 1px solid #fff;
     }
   }
 

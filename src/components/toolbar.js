@@ -332,7 +332,7 @@ export default class Toolbar extends React.Component {
               autoHighlight={false}
               items={autocompleteItems}
               onSelect={(inputValue, item) => {
-                this.props.setCoverRequest(item.title, true);
+                this.props.setCoverRequest(item.title, item._id, true);
                 this.hideLinkInput();
                 // onAutocompleteSelect(inputValue, item);
               }}

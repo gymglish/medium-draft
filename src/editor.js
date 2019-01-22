@@ -97,6 +97,7 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: PropTypes.bool,
     autocompleteItems: PropTypes.arrayOf(PropTypes.shape()),
     onAutocompleteSelect: PropTypes.func,
+    onRemoveCoverRequest: PropTypes.func,
     displayAddPlaceholder: PropTypes.bool,
     blankText: PropTypes.string,
     isFocused: PropTypes.bool,
@@ -135,6 +136,7 @@ class MediumDraftEditor extends React.Component {
     displayCoverRequest: false,
     autocompleteItems: [{}],
     onAutocompleteSelect: () => {},
+    onRemoveCoverRequest: () => {},
     displayAddPlaceholder: false,
     blankText: '[blank]',
     isFocused: false,
@@ -162,6 +164,8 @@ class MediumDraftEditor extends React.Component {
     // New customizations
     this.setCoverRequest = this.setCoverRequest.bind(this);
     this.insertPlaceholder = this.insertPlaceholder.bind(this);
+    // // this.onRemoveCoverRequest = this.onRemoveCoverRequest.bind(this);
+    this.removeLink = this.removeLink.bind(this);
   }
 
   /**
@@ -245,15 +249,15 @@ class MediumDraftEditor extends React.Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
 
-  setCoverRequest(cover, preexisting = false) {
+  setCoverRequest(cover, _id, preexisting = false) {
     let { editorState } = this.props;
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     let entityKey = null;
 
     if (cover !== '') {
-      this.props.onAutocompleteSelect(cover, preexisting);
-      const contentWithEntity = content.createEntity(E.COVER_REQUEST, 'MUTABLE', { cover });
+      this.props.onAutocompleteSelect(cover, _id, preexisting);
+      const contentWithEntity = content.createEntity(E.COVER_REQUEST, 'MUTABLE', { cover, _id });
       editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
@@ -557,8 +561,12 @@ class MediumDraftEditor extends React.Component {
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(blockKey);
     const oldSelection = editorState.getSelection();
+    const entityData = content.getEntity(entityKey).getData();
+    const isCoverRequest = content.getEntity(entityKey).getType() === E.COVER_REQUEST;
+
     block.findEntityRanges((character) => {
       const eKey = character.getEntity();
+
       return eKey === entityKey;
     }, (start, end) => {
       const selection = new SelectionState({
@@ -568,6 +576,9 @@ class MediumDraftEditor extends React.Component {
         focusOffset: end,
       });
       const newEditorState = EditorState.forceSelection(RichUtils.toggleLink(editorState, selection, null), oldSelection);
+      if (isCoverRequest) {
+        this.props.onRemoveCoverRequest(entityData._id);
+      }
       this.onChange(newEditorState, this.focus);
     });
   };

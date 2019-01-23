@@ -252,7 +252,7 @@ class MediumDraftEditor extends React.Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
 
-  setCoverRequest(cover, _id, preexisting = false, previousCoverId) {
+  setCoverRequest(cover, _id, preexisting = false, previousCover) {
     let { editorState } = this.props;
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
@@ -264,7 +264,7 @@ class MediumDraftEditor extends React.Component {
       editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
       entityKey = contentWithEntity.getLastCreatedEntityKey();
 
-      if (previousCoverId) this.props.onRemoveCoverRequest(previousCoverId);
+      if (previousCover) this.props.onRemoveCoverRequest(previousCover);
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
@@ -582,7 +582,7 @@ class MediumDraftEditor extends React.Component {
       });
       const newEditorState = EditorState.forceSelection(RichUtils.toggleLink(editorState, selection, null), oldSelection);
       if (isCoverRequest) {
-        this.props.onRemoveCoverRequest(entityData._id);
+        this.props.onRemoveCoverRequest(entityData.cover);
       }
       this.onChange(newEditorState, this.focus);
     });

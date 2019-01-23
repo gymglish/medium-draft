@@ -14,7 +14,7 @@ export const styleToHTML = (style) => {
     case Inline.UNDERLINE:
       return <u />;
     case Inline.HIGHLIGHT:
-      return <span />;
+      return <mark />;
     case Inline.CODE:
       return <code />;
     case 'FONT_SMALL':

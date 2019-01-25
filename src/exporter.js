@@ -118,6 +118,11 @@ export const blockToHTML = (block) => {
         start: '<div style="text-align: right;">',
         end: '</div>',
       };
+    case Block.ALIGN_LEFT:
+      return {
+        start: '<div style="text-align: left;">',
+        end: '</div>',
+      };
     default: return null;
   }
 };

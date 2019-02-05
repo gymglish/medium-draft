@@ -415,8 +415,8 @@ class MediumDraftEditor extends React.Component {
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return HANDLED;
     } */
-    const block = getCurrentBlock(editorState);
-    const currentBlockType = block.getType();
+    // const block = getCurrentBlock(editorState);
+    // const currentBlockType = block.getType();
     // if (command === KEY_COMMANDS.deleteBlock()) {
     //   if (currentBlockType.indexOf(Block.ATOMIC) === 0 && block.getText().length === 0) {
     //     this.onChange(resetBlockWithType(editorState, Block.UNSTYLED, { text: '' }));
@@ -424,24 +424,30 @@ class MediumDraftEditor extends React.Component {
     //   }
     //   return NOT_HANDLED;
     // }
-    if (command.indexOf(`${KEY_COMMANDS.changeType()}`) === 0) {
-      let newBlockType = command.split(':')[1];
-      // const currentBlockType = block.getType();
-      if (currentBlockType === Block.ATOMIC) {
-        return HANDLED;
-      }
-      if (currentBlockType === Block.BLOCKQUOTE && newBlockType === Block.CAPTION) {
-        newBlockType = Block.BLOCKQUOTE_CAPTION;
-      } else if (currentBlockType === Block.BLOCKQUOTE_CAPTION && newBlockType === Block.CAPTION) {
-        newBlockType = Block.BLOCKQUOTE;
-      }
-      this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
-      return HANDLED;
-    } else if (command.indexOf(`${KEY_COMMANDS.toggleInline()}`) === 0) {
-      const inline = command.split(':')[1];
-      this._toggleInlineStyle(inline);
-      return HANDLED;
-    }
+
+    /*
+    * This block handles shortcuts to change block type
+    * disabling this as it caused unforeseen changes unknown to the user
+    * */
+
+    // if (command.indexOf(`${KEY_COMMANDS.changeType()}`) === 0) {
+    //   let newBlockType = command.split(':')[1];
+    //   // const currentBlockType = block.getType();
+    //   if (currentBlockType === Block.ATOMIC) {
+    //     return HANDLED;
+    //   }
+    //   if (currentBlockType === Block.BLOCKQUOTE && newBlockType === Block.CAPTION) {
+    //     newBlockType = Block.BLOCKQUOTE_CAPTION;
+    //   } else if (currentBlockType === Block.BLOCKQUOTE_CAPTION && newBlockType === Block.CAPTION) {
+    //     newBlockType = Block.BLOCKQUOTE;
+    //   }
+    //   this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
+    //   return HANDLED;
+    // } else if (command.indexOf(`${KEY_COMMANDS.toggleInline()}`) === 0) {
+    //   const inline = command.split(':')[1];
+    //   this._toggleInlineStyle(inline);
+    //   return HANDLED;
+    // }
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
       this.onChange(newState);

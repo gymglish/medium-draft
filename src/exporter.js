@@ -17,6 +17,10 @@ export const styleToHTML = (style) => {
       return <mark />;
     case Inline.CODE:
       return <code />;
+    case Inline.SUPERSCRIPT:
+      return <sup />;
+    case Inline.SUBSCRIPT:
+      return <sub />;
     case 'FONT_SMALL':
       return {
         start: '<span style="font-size: 0.8em">',

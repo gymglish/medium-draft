@@ -18,6 +18,10 @@ export const htmlToStyle = (nodeName, node, currentStyle) => {
       break;
     case 'code':
       return currentStyle.add(Inline.CODE);
+    case 'sup':
+      return currentStyle.add(Inline.SUPERSCRIPT);
+    case 'sub':
+      return currentStyle.add(Inline.SUBSCRIPT);
     default:
       break;
   }

@@ -2,7 +2,11 @@ import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 
 import { KEY_COMMANDS } from './constants';
 
-const { changeType, showLinkInput, unlink } = KEY_COMMANDS;
+const {
+  // changeType,
+  showLinkInput,
+  unlink,
+} = KEY_COMMANDS;
 
 /*
 Emits various key commands to be used by `handleKeyCommand` in `Editor` based

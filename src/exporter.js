@@ -123,6 +123,8 @@ export const blockToHTML = (block) => {
         start: '<div style="text-align: left;">',
         end: '</div>',
       };
+    case Block.CODE:
+      return <code />;
     default: return null;
   }
 };

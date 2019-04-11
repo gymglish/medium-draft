@@ -36,6 +36,11 @@ export const styleToHTML = (style) => {
         start: '<span style="font-size: 1.2em">',
         end: '</span>',
       };
+    case 'QUOTATION':
+      return {
+        start: '<q>',
+        end: '</q>',
+      };
     default:
       return null;
   }

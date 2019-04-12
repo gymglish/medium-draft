@@ -8,6 +8,7 @@ import {
 import Link, { findLinkEntities } from '../components/entities/link';
 import CoverRequest, { findCoverRequestEntities } from '../components/entities/coverRequest';
 import Placeholder, { findPlaceholderEntities } from '../components/entities/placeholder';
+import Quotation, { findQuotationEntities } from '../components/entities/quotation';
 
 
 const defaultDecorators = new CompositeDecorator([
@@ -22,6 +23,10 @@ const defaultDecorators = new CompositeDecorator([
   {
     strategy: findPlaceholderEntities,
     component: Placeholder,
+  },
+  {
+    strategy: findQuotationEntities,
+    component: Quotation,
   },
 ]);
 

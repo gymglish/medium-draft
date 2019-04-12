@@ -45,6 +45,7 @@ export const Entity = {
   LINK: 'LINK',
   COVER_REQUEST: 'COVER_REQUEST',
   PLACEHOLDER: 'PLACEHOLDER',
+  QUOTATION: 'QUOTATION',
 };
 
 export const HYPERLINK = 'hyperlink';
